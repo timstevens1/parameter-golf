@@ -98,6 +98,21 @@ class Hyperparameters:
 
     out_dir: str = os.environ.get("OUT_DIR", "logs")
 
+    # Training mode: "hybrid" (ES+gradient), "gradient_only" (pure Adam),
+    # "gradient_rebinarize" (Adam + periodic snap to binary)
+    mode: str = os.environ.get("MODE", "hybrid")
+    rebinarize_every: int = int(os.environ.get("REBINARIZE_EVERY", "4"))
+
+    # Gradient accumulation: split each gradient step into micro-batches
+    # Effective batch = gradient_batch_tokens (unchanged), split into this many pieces
+    grad_accum_steps: int = int(os.environ.get("GRAD_ACCUM_STEPS", "1"))
+
+    # Max validation tokens to evaluate (0 = use full val set)
+    max_val_tokens: int = int(os.environ.get("MAX_VAL_TOKENS", "0"))
+
+    # Warm start: load weights from a previous run's saved model
+    warm_start: str = os.environ.get("WARM_START", "")
+
     @property
     def train_files(self) -> str:
         return f"{self.data_path}/fineweb_train_*.bin"
@@ -330,6 +345,60 @@ def inject_binary_weights(model: BinaryMambaLM,
     model.update(tree_unflatten(list(params.items())))
 
 
+def load_warm_start(model: BinaryMambaLM, path: str) -> None:
+    """Load weights from a previously saved model pickle for warm starting."""
+    with open(path, 'rb') as f:
+        save_dict = pickle.load(f)
+
+    params = dict(tree_flatten(model.parameters()))
+    loaded = {}
+    for name, data in save_dict.items():
+        if name not in params:
+            continue
+        if data['type'] == 'binary_packed':
+            # Unpack: bits -> signs, scales -> broadcast
+            bits = np.unpackbits(data['bits'])[:data['numel']]
+            signs = (bits.astype(np.float32) * 2 - 1)  # {0,1} -> {-1,+1}
+            shape = data['shape']
+            signs = signs.reshape(shape)
+            scales = data['scales']  # (out_dim, num_groups)
+            group_size = shape[1] // scales.shape[1]
+            scales_broadcast = np.repeat(scales, group_size, axis=1)
+            w = signs * scales_broadcast
+            loaded[name] = mx.array(w, dtype=mx.float16)
+        elif data['type'] == 'fp':
+            target_dtype = params[name].dtype
+            loaded[name] = mx.array(data['data']).astype(target_dtype)
+
+    params.update(loaded)
+    model.update(tree_unflatten(list(params.items())))
+    mx.eval(model.parameters())
+
+
+def rebinarize_weights(model: BinaryMambaLM, group_size: int = 64) -> None:
+    """Snap each BinaryLinear weight to sign(w) * group_mean(|w|).
+
+    Maintains binary structure while allowing gradient to have explored
+    the continuous space between rebinarization steps.
+    """
+    params = dict(tree_flatten(model.parameters()))
+    updated = {}
+    for name, param in params.items():
+        if _is_binary_weight(name):
+            w = param.astype(mx.float32)
+            signs = mx.where(w >= 0, 1.0, -1.0)
+            out_dim, padded_in = w.shape
+            num_groups = padded_in // group_size
+            w_grouped = mx.abs(w).reshape(out_dim, num_groups, group_size)
+            scales = mx.mean(w_grouped, axis=2)
+            scales_broadcast = mx.repeat(scales, group_size, axis=1)
+            updated[name] = (signs * scales_broadcast).astype(mx.float16)
+    if updated:
+        params.update(updated)
+        model.update(tree_unflatten(list(params.items())))
+        mx.eval(model.parameters())
+
+
 # ==============================================================================
 # GRADIENT COMPUTATION FOR CONTINUOUS PARAMS
 # ==============================================================================
@@ -374,6 +443,10 @@ def main() -> None:
 
     # Data
     val_tokens = load_validation_tokens(args.val_files, args.train_seq_len)
+    if args.max_val_tokens > 0:
+        usable = ((args.max_val_tokens) // args.train_seq_len) * args.train_seq_len + 1
+        val_tokens = val_tokens[:usable]
+        log(f"val_tokens_limited:{len(val_tokens)} (from {62_000_000})")
     base_bytes_lut, has_leading_space_lut, is_boundary_token_lut = build_sentencepiece_luts(sp, args.vocab_size)
     train_loader = TokenLoader(args.train_files, log_fn=log)
 
@@ -394,6 +467,11 @@ def main() -> None:
         weight_tie_layers=args.weight_tie_layers,
         group_size=args.group_size,
     )
+
+    # Warm start: load weights from a previous checkpoint
+    if args.warm_start:
+        load_warm_start(model, args.warm_start)
+        log(f"warm_start:{args.warm_start}")
 
     # Report parameter budget
     budget = param_budget_report(model)
@@ -422,22 +500,23 @@ def main() -> None:
     if use_metal_scan:
         patch_model_for_metal_scan(model, mode=1)  # start in eval mode
 
-    # Initialize ES
-    binary_weights = extract_binary_weights(model)
-    es_config = ESConfig(
-        pop_size=args.pop_size,
-        elite_frac=args.elite_frac,
-        init_flip_rate=args.init_flip_rate,
-        min_flip_rate=args.min_flip_rate,
-        flip_rate_decay=args.flip_rate_decay,
-        crossover_rate=args.crossover_rate,
-        eval_tokens=args.es_eval_tokens,
-        gradient_steps_per_gen=args.gradient_steps_per_gen,
-    )
-    es = BinaryES(es_config, binary_weights)
-
-    # Batched population evaluator
-    evaluator = BatchedPopulationEvaluator(model, group_size=EVAL_GROUP_SIZE)
+    # Initialize ES (only needed for hybrid mode)
+    es = None
+    evaluator = None
+    if args.mode == "hybrid":
+        binary_weights = extract_binary_weights(model)
+        es_config = ESConfig(
+            pop_size=args.pop_size,
+            elite_frac=args.elite_frac,
+            init_flip_rate=args.init_flip_rate,
+            min_flip_rate=args.min_flip_rate,
+            flip_rate_decay=args.flip_rate_decay,
+            crossover_rate=args.crossover_rate,
+            eval_tokens=args.es_eval_tokens,
+            gradient_steps_per_gen=args.gradient_steps_per_gen,
+        )
+        es = BinaryES(es_config, binary_weights)
+        evaluator = BatchedPopulationEvaluator(model, group_size=EVAL_GROUP_SIZE)
 
     # Continuous optimizer
     cont_opt = ContinuousOptimizer(model, args)
@@ -453,8 +532,10 @@ def main() -> None:
 
     scan_mode = {0: "python", 1: "metal_fwd_only", 2: "metal_fwd_bwd"}[USE_METAL_SCAN]
     log(f"scan_mode:{scan_mode} eval_group_size:{EVAL_GROUP_SIZE}")
-    log(f"Starting hybrid ES + gradient training for {args.es_generations} generations")
+    log(f"mode:{args.mode} rebinarize_every:{args.rebinarize_every}")
+    log(f"Starting {args.mode} training for {args.es_generations} generations")
     t0 = time.time()
+    total_grad_steps = 0
 
     for gen in range(args.es_generations):
         gen_t0 = time.time()
@@ -465,45 +546,81 @@ def main() -> None:
             log(f"Wallclock limit reached at generation {gen}")
             break
 
-        # ---- Phase A: Evaluate all candidates (batched) ----
-        # Metal scan mode=1 (forward-only, fast, no grad needed)
-        if use_metal_scan:
-            patch_model_for_metal_scan(model, mode=1)
+        best_loss = float('inf')
+        mean_loss = float('inf')
 
-        eval_x, eval_y = train_loader.next_batch(args.es_eval_tokens, args.train_seq_len)
+        # ---- Phase A: ES evaluation + selection (hybrid only) ----
+        if args.mode == "hybrid":
+            if use_metal_scan:
+                patch_model_for_metal_scan(model, mode=1)
 
-        candidates = [es.get_candidate(i) for i in range(args.pop_size)]
-        fitnesses = evaluator.evaluate_population(candidates, eval_x, eval_y)
+            eval_x, eval_y = train_loader.next_batch(args.es_eval_tokens, args.train_seq_len)
+            candidates = [es.get_candidate(i) for i in range(args.pop_size)]
+            fitnesses = evaluator.evaluate_population(candidates, eval_x, eval_y)
+            es.set_fitnesses(fitnesses)
 
-        es.set_fitnesses(fitnesses)
+            best_binary = es.step()
+            inject_binary_weights(model, best_binary)
 
-        # ---- Phase B: ES selection + new population ----
-        best_binary = es.step()
+            best_loss = min(fitnesses)
+            mean_loss = sum(fitnesses) / len(fitnesses)
 
-        # Install best candidate into model
-        inject_binary_weights(model, best_binary)
-
-        # ---- Phase C: Gradient steps on continuous params ----
-        # Metal scan mode=2 (forward+backward) for gradients through A_log/dt.
+        # ---- Phase B: Gradient steps on all trainable params ----
         if use_metal_scan and args.gradient_steps_per_gen > 0:
             patch_model_for_metal_scan(model, mode=2)
 
+        gen_loss_sum = 0.0
+        micro_tokens = args.gradient_batch_tokens // args.grad_accum_steps
+        grad_scale = 1.0 / args.grad_accum_steps
         for gstep in range(args.gradient_steps_per_gen):
-            grad_x, grad_y = train_loader.next_batch(
-                args.gradient_batch_tokens, args.train_seq_len)
-            loss, grads = loss_and_grad(grad_x, grad_y)
-            mx.eval(loss, grads)
-            cont_opt.step(model, grads)
+            # Gradient accumulation: split batch into micro-batches
+            accum: dict[str, mx.array] | None = None
+            step_loss = 0.0
+            for _micro in range(args.grad_accum_steps):
+                grad_x, grad_y = train_loader.next_batch(
+                    micro_tokens, args.train_seq_len)
+                loss, grads = loss_and_grad(grad_x, grad_y)
+                # Accumulate scaled gradients
+                flat_grads = dict(tree_flatten(grads))
+                if accum is None:
+                    accum = {k: g * grad_scale for k, g in flat_grads.items()}
+                else:
+                    for k, g in flat_grads.items():
+                        accum[k] = accum[k] + g * grad_scale
+                step_loss += float(loss.item()) * grad_scale
+                mx.eval(loss, accum)  # Materialize to cap peak memory
+
+            grads_accum = tree_unflatten(list(accum.items()))
+            cont_opt.step(model, grads_accum)
+            gen_loss_sum += step_loss
+            total_grad_steps += 1
+
+            # Re-binarize periodically in gradient_rebinarize mode
+            if (args.mode == "gradient_rebinarize"
+                    and total_grad_steps % args.rebinarize_every == 0):
+                rebinarize_weights(model, group_size=args.group_size)
+
+        # For non-hybrid modes, use gradient loss as the training metric
+        if args.mode != "hybrid" and args.gradient_steps_per_gen > 0:
+            best_loss = gen_loss_sum / args.gradient_steps_per_gen
+            mean_loss = best_loss
 
         gen_time = time.time() - gen_t0
 
         # ---- Logging ----
         if gen % args.train_log_every == 0 or gen == args.es_generations - 1:
-            log(f"gen:{gen} {es.log_state()} "
-                f"best_loss:{min(fitnesses):.4f} "
-                f"mean_loss:{sum(fitnesses)/len(fitnesses):.4f} "
-                f"gen_time:{gen_time:.1f}s "
-                f"elapsed:{elapsed:.0f}s")
+            if args.mode == "hybrid":
+                log(f"gen:{gen} {es.log_state()} "
+                    f"best_loss:{best_loss:.4f} "
+                    f"mean_loss:{mean_loss:.4f} "
+                    f"gen_time:{gen_time:.1f}s "
+                    f"elapsed:{elapsed:.0f}s")
+            else:
+                log(f"gen:{gen} mode:{args.mode} "
+                    f"grad_steps:{total_grad_steps} "
+                    f"train_loss:{best_loss:.4f} "
+                    f"gen_time:{gen_time:.1f}s "
+                    f"elapsed:{elapsed:.0f}s")
 
         # ---- Validation ----
         if args.val_loss_every > 0 and (gen % args.val_loss_every == 0 or gen == args.es_generations - 1):
@@ -523,8 +640,10 @@ def main() -> None:
         model, val_tokens, args.train_seq_len, val_batch_seqs,
         base_bytes_lut, has_leading_space_lut, is_boundary_token_lut,
     )
+    final_gens = es.state.generation if es is not None else gen
     log(f"FINAL val_loss:{val_loss:.4f} val_bpb:{val_bpb:.4f} "
-        f"total_time:{total_time:.1f}s generations:{es.state.generation}")
+        f"total_time:{total_time:.1f}s generations:{final_gens} "
+        f"grad_steps:{total_grad_steps} mode:{args.mode}")
 
     # ---- Save model ----
     save_path = out_dir / f"{args.run_id}_model.pkl"
@@ -555,7 +674,7 @@ def main() -> None:
         else:
             save_dict[name] = {
                 'type': 'fp',
-                'data': np.array(param),
+                'data': np.array(param.astype(mx.float32)),
             }
 
     with open(save_path, 'wb') as f:

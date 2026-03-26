@@ -178,6 +178,11 @@ class BinaryMambaLayer(nn.Module):
         return x
 
 
+# WARNING: mx.checkpoint breaks gradient computation through the Metal SSM
+# scan kernel's custom VJP. Do not enable unless the scan kernel issue is fixed.
+GRAD_CHECKPOINT = bool(int(os.environ.get("GRAD_CHECKPOINT", "0")))
+
+
 class BinaryMambaLM(nn.Module):
     """
     Binary Mamba language model.
@@ -195,6 +200,7 @@ class BinaryMambaLM(nn.Module):
         self.logit_softcap = logit_softcap
         self.num_layers = num_layers
         self.weight_tie_layers = weight_tie_layers
+        self.grad_checkpoint = GRAD_CHECKPOINT
 
         # Embedding stays FP (lookup table, not a matmul)
         self.tok_emb = nn.Embedding(vocab_size, dim)
@@ -233,7 +239,11 @@ class BinaryMambaLM(nn.Module):
     def __call__(self, input_ids: mx.array) -> mx.array:
         x = rms_norm(self.tok_emb(input_ids).astype(COMPUTE_DTYPE))
         for layer_idx in self._layer_indices:
-            x = self.layers[layer_idx](x)
+            layer = self.layers[layer_idx]
+            if self.grad_checkpoint:
+                x = mx.checkpoint(layer)(x)
+            else:
+                x = layer(x)
         return self.final_norm(x)
 
     def loss(self, input_ids: mx.array, target_ids: mx.array) -> mx.array:
