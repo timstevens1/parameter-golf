@@ -1,0 +1,21 @@
+{"step": 1, "mode": "adam", "loss_w": 6.966395854949951, "val_loss": 6.877806663513184, "nfe_fwd": 2, "nfe_bwd": 1, "wallclock_s": 0.20825054193846881}
+{"step": 25, "mode": "adam", "loss_w": 6.019964218139648, "nfe_fwd": 26, "nfe_bwd": 25, "wallclock_s": 1.1724868749734014}
+{"step": 50, "mode": "adam", "loss_w": 5.954154968261719, "val_loss": 6.003554821014404, "nfe_fwd": 52, "nfe_bwd": 50, "wallclock_s": 2.1755538329016417}
+{"step": 75, "mode": "adam", "loss_w": 6.038381099700928, "nfe_fwd": 77, "nfe_bwd": 75, "wallclock_s": 3.1818717918358743}
+{"step": 100, "mode": "adam", "loss_w": 5.947134971618652, "val_loss": 5.902682304382324, "nfe_fwd": 103, "nfe_bwd": 100, "wallclock_s": 4.183841332793236}
+{"step": 125, "mode": "adam", "loss_w": 5.599011421203613, "nfe_fwd": 128, "nfe_bwd": 125, "wallclock_s": 5.17920674989}
+{"step": 150, "mode": "adam", "loss_w": 5.4169230461120605, "val_loss": 5.37649393081665, "nfe_fwd": 154, "nfe_bwd": 150, "wallclock_s": 6.223092957865447}
+{"step": 175, "mode": "adam", "loss_w": 5.373030662536621, "nfe_fwd": 179, "nfe_bwd": 175, "wallclock_s": 7.535120791988447}
+{"step": 200, "mode": "adam", "loss_w": 5.260743141174316, "val_loss": 5.232420921325684, "nfe_fwd": 205, "nfe_bwd": 200, "wallclock_s": 9.366924291942269}
+{"step": 225, "mode": "adam", "loss_w": 5.131591796875, "nfe_fwd": 230, "nfe_bwd": 225, "wallclock_s": 11.271764166885987}
+{"step": 250, "mode": "adam", "loss_w": 5.094512462615967, "val_loss": 5.045596122741699, "nfe_fwd": 256, "nfe_bwd": 250, "wallclock_s": 13.206318166805431}
+{"step": 275, "mode": "adam", "loss_w": 4.961986541748047, "nfe_fwd": 281, "nfe_bwd": 275, "wallclock_s": 15.11381583288312}
+{"step": 300, "mode": "adam", "loss_w": 4.8600053787231445, "val_loss": 4.942060947418213, "nfe_fwd": 307, "nfe_bwd": 300, "wallclock_s": 17.028082124888897}
+{"step": 325, "mode": "adam", "loss_w": 4.910616874694824, "nfe_fwd": 332, "nfe_bwd": 325, "wallclock_s": 18.949143457924947}
+{"step": 350, "mode": "adam", "loss_w": 4.774001598358154, "val_loss": 4.7768120765686035, "nfe_fwd": 358, "nfe_bwd": 350, "wallclock_s": 20.883238791953772}
+{"step": 375, "mode": "adam", "loss_w": 4.8977460861206055, "nfe_fwd": 383, "nfe_bwd": 375, "wallclock_s": 22.771183957811445}
+{"step": 400, "mode": "adam", "loss_w": 4.850837707519531, "val_loss": 4.711390018463135, "nfe_fwd": 409, "nfe_bwd": 400, "wallclock_s": 24.683513666968793}
+{"step": 425, "mode": "adam", "loss_w": 4.738397598266602, "nfe_fwd": 434, "nfe_bwd": 425, "wallclock_s": 26.60101041686721}
+{"step": 450, "mode": "adam", "loss_w": 4.694463729858398, "val_loss": 4.628546237945557, "nfe_fwd": 460, "nfe_bwd": 450, "wallclock_s": 28.53007183293812}
+{"step": 475, "mode": "adam", "loss_w": 4.68400239944458, "nfe_fwd": 485, "nfe_bwd": 475, "wallclock_s": 30.473588249878958}
+{"step": 500, "mode": "adam", "loss_w": 4.565321922302246, "val_loss": 4.498950004577637, "nfe_fwd": 511, "nfe_bwd": 500, "wallclock_s": 32.40503679192625}

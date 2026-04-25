@@ -1,0 +1,30 @@
+{"step": 1, "outer_step": 1, "inner": 0, "mode": "adam", "loss_w": 6.963929176330566, "num_micro": 32, "val_loss": 6.876255989074707, "nfe_fwd": 33, "nfe_bwd": 32, "wallclock_s": 1.3684204581659287}
+{"step": 2, "outer_step": 2, "inner": 0, "mode": "adam", "loss_w": 6.87883996963501, "num_micro": 32, "nfe_fwd": 65, "nfe_bwd": 64, "wallclock_s": 2.653058542171493}
+{"step": 3, "outer_step": 3, "inner": 0, "mode": "adam", "loss_w": 6.514840602874756, "num_micro": 32, "val_loss": 6.332710266113281, "nfe_fwd": 98, "nfe_bwd": 96, "wallclock_s": 3.938665417023003}
+{"step": 4, "outer_step": 4, "inner": 0, "mode": "adam", "loss_w": 6.341340065002441, "num_micro": 32, "nfe_fwd": 130, "nfe_bwd": 128, "wallclock_s": 5.287488708039746}
+{"step": 5, "outer_step": 5, "inner": 0, "mode": "adam", "loss_w": 6.22847843170166, "num_micro": 32, "nfe_fwd": 162, "nfe_bwd": 160, "wallclock_s": 7.710380625212565}
+{"step": 6, "outer_step": 6, "inner": 0, "mode": "adam", "loss_w": 6.154131889343262, "num_micro": 32, "val_loss": 6.090810298919678, "nfe_fwd": 195, "nfe_bwd": 192, "wallclock_s": 10.421628625132143}
+{"step": 7, "outer_step": 7, "inner": 0, "mode": "adam", "loss_w": 6.085038185119629, "num_micro": 32, "nfe_fwd": 227, "nfe_bwd": 224, "wallclock_s": 14.411371542140841}
+{"step": 8, "outer_step": 8, "inner": 0, "mode": "adam", "loss_w": 6.077040672302246, "num_micro": 32, "nfe_fwd": 259, "nfe_bwd": 256, "wallclock_s": 18.244388583116233}
+{"step": 9, "outer_step": 9, "inner": 0, "mode": "adam", "loss_w": 6.0650482177734375, "num_micro": 32, "val_loss": 6.042396068572998, "nfe_fwd": 292, "nfe_bwd": 288, "wallclock_s": 22.195242500165477}
+{"step": 10, "outer_step": 10, "inner": 0, "mode": "adam", "loss_w": 6.049701690673828, "num_micro": 32, "nfe_fwd": 324, "nfe_bwd": 320, "wallclock_s": 26.091159500181675}
+{"step": 11, "outer_step": 11, "inner": 0, "mode": "adam", "loss_w": 6.060141563415527, "num_micro": 32, "nfe_fwd": 356, "nfe_bwd": 352, "wallclock_s": 29.667939125094563}
+{"step": 12, "outer_step": 12, "inner": 0, "mode": "adam", "loss_w": 6.060471534729004, "num_micro": 32, "val_loss": 6.027555465698242, "nfe_fwd": 389, "nfe_bwd": 384, "wallclock_s": 33.21699050022289}
+{"step": 13, "outer_step": 13, "inner": 0, "mode": "adam", "loss_w": 6.036821365356445, "num_micro": 32, "nfe_fwd": 421, "nfe_bwd": 416, "wallclock_s": 36.648574125021696}
+{"step": 14, "outer_step": 14, "inner": 0, "mode": "adam", "loss_w": 6.035820007324219, "num_micro": 32, "nfe_fwd": 453, "nfe_bwd": 448, "wallclock_s": 40.09957387507893}
+{"step": 15, "outer_step": 15, "inner": 0, "mode": "adam", "loss_w": 6.036893367767334, "num_micro": 32, "val_loss": 6.009851455688477, "nfe_fwd": 486, "nfe_bwd": 480, "wallclock_s": 43.609371667029336}
+{"step": 16, "outer_step": 16, "inner": 0, "mode": "adam", "loss_w": 6.021792888641357, "num_micro": 32, "nfe_fwd": 518, "nfe_bwd": 512, "wallclock_s": 47.04093729215674}
+{"step": 17, "outer_step": 17, "inner": 0, "mode": "adam", "loss_w": 6.032260894775391, "num_micro": 32, "nfe_fwd": 550, "nfe_bwd": 544, "wallclock_s": 50.48948004213162}
+{"step": 18, "outer_step": 18, "inner": 0, "mode": "adam", "loss_w": 6.016374588012695, "num_micro": 32, "val_loss": 6.000567436218262, "nfe_fwd": 583, "nfe_bwd": 576, "wallclock_s": 54.15169695811346}
+{"step": 19, "outer_step": 19, "inner": 0, "mode": "adam", "loss_w": 6.001452922821045, "num_micro": 32, "nfe_fwd": 615, "nfe_bwd": 608, "wallclock_s": 57.72205491713248}
+{"step": 20, "outer_step": 20, "inner": 0, "mode": "adam", "loss_w": 5.987918376922607, "num_micro": 32, "nfe_fwd": 647, "nfe_bwd": 640, "wallclock_s": 61.608046250185}
+{"step": 21, "outer_step": 21, "inner": 0, "mode": "adam", "loss_w": 5.98772668838501, "num_micro": 32, "val_loss": 5.9990997314453125, "nfe_fwd": 680, "nfe_bwd": 672, "wallclock_s": 65.54004658316262}
+{"step": 22, "outer_step": 22, "inner": 0, "mode": "adam", "loss_w": 5.991140842437744, "num_micro": 32, "nfe_fwd": 712, "nfe_bwd": 704, "wallclock_s": 69.47134475014172}
+{"step": 23, "outer_step": 23, "inner": 0, "mode": "adam", "loss_w": 5.983433723449707, "num_micro": 32, "nfe_fwd": 744, "nfe_bwd": 736, "wallclock_s": 73.2999115830753}
+{"step": 24, "outer_step": 24, "inner": 0, "mode": "adam", "loss_w": 6.001667022705078, "num_micro": 32, "val_loss": 6.000966548919678, "nfe_fwd": 777, "nfe_bwd": 768, "wallclock_s": 76.9214420830831}
+{"step": 25, "outer_step": 25, "inner": 0, "mode": "adam", "loss_w": 6.003859996795654, "num_micro": 32, "nfe_fwd": 809, "nfe_bwd": 800, "wallclock_s": 80.5127139580436}
+{"step": 26, "outer_step": 26, "inner": 0, "mode": "adam", "loss_w": 6.019076824188232, "num_micro": 32, "nfe_fwd": 841, "nfe_bwd": 832, "wallclock_s": 83.95568562508561}
+{"step": 27, "outer_step": 27, "inner": 0, "mode": "adam", "loss_w": 5.99962043762207, "num_micro": 32, "val_loss": 5.9980621337890625, "nfe_fwd": 874, "nfe_bwd": 864, "wallclock_s": 87.45754408300854}
+{"step": 28, "outer_step": 28, "inner": 0, "mode": "adam", "loss_w": 6.006592273712158, "num_micro": 32, "nfe_fwd": 906, "nfe_bwd": 896, "wallclock_s": 90.90341304219328}
+{"step": 29, "outer_step": 29, "inner": 0, "mode": "adam", "loss_w": 5.996701717376709, "num_micro": 32, "nfe_fwd": 938, "nfe_bwd": 928, "wallclock_s": 94.35887479200028}
+{"step": 30, "outer_step": 30, "inner": 0, "mode": "adam", "loss_w": 6.010328769683838, "num_micro": 32, "val_loss": 5.994380950927734, "nfe_fwd": 971, "nfe_bwd": 960, "wallclock_s": 97.86762791709043}

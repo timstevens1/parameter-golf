@@ -1,0 +1,9 @@
+{"step": 50, "phase": "warmup", "mode": "adam", "loss_w": 6.068384170532227, "val_loss": 6.017117977142334, "nfe_fwd": 51, "nfe_bwd": 50, "wallclock_s": 1.4009799170307815}
+{"step": 100, "phase": "warmup", "mode": "adam", "loss_w": 5.898053169250488, "val_loss": 5.910436630249023, "nfe_fwd": 102, "nfe_bwd": 100, "wallclock_s": 2.547731875209138}
+{"step": 150, "phase": "warmup", "mode": "adam", "loss_w": 5.420224189758301, "val_loss": 5.606888294219971, "nfe_fwd": 153, "nfe_bwd": 150, "wallclock_s": 3.6929271251428872}
+{"step": 200, "phase": "warmup", "mode": "adam", "loss_w": 5.5429887771606445, "val_loss": 5.519221305847168, "nfe_fwd": 204, "nfe_bwd": 200, "wallclock_s": 4.842567542102188}
+{"step": 201, "outer_step": 1, "inner": 0, "mode": "adam", "loss_w": 5.535761833190918, "num_micro": 1, "nfe_fwd": 205, "nfe_bwd": 201, "wallclock_s": 4.866700125159696}
+{"step": 202, "outer_step": 2, "inner": 0, "mode": "adam", "loss_w": 5.4750590324401855, "num_micro": 1, "nfe_fwd": 206, "nfe_bwd": 202, "wallclock_s": 4.889939791988581}
+{"step": 203, "outer_step": 3, "inner": 0, "mode": "adam", "loss_w": 5.529139995574951, "num_micro": 1, "nfe_fwd": 207, "nfe_bwd": 203, "wallclock_s": 4.913943417137489}
+{"step": 204, "outer_step": 4, "inner": 0, "mode": "adam", "loss_w": 5.575284004211426, "num_micro": 1, "nfe_fwd": 208, "nfe_bwd": 204, "wallclock_s": 4.937037792056799}
+{"step": 205, "outer_step": 5, "inner": 0, "mode": "adam", "loss_w": 5.3371076583862305, "num_micro": 1, "val_loss": 5.464844226837158, "nfe_fwd": 210, "nfe_bwd": 205, "wallclock_s": 4.97038225014694}

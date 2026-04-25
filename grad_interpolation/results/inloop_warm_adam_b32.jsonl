@@ -1,0 +1,24 @@
+{"step": 50, "phase": "warmup", "mode": "adam", "loss_w": 6.068384170532227, "val_loss": 6.017117977142334, "nfe_fwd": 51, "nfe_bwd": 50, "wallclock_s": 1.2730921669863164}
+{"step": 100, "phase": "warmup", "mode": "adam", "loss_w": 5.898045539855957, "val_loss": 5.910423278808594, "nfe_fwd": 102, "nfe_bwd": 100, "wallclock_s": 2.4177636669483036}
+{"step": 150, "phase": "warmup", "mode": "adam", "loss_w": 5.435669422149658, "val_loss": 5.604709625244141, "nfe_fwd": 153, "nfe_bwd": 150, "wallclock_s": 3.5606865000445396}
+{"step": 200, "phase": "warmup", "mode": "adam", "loss_w": 5.547337055206299, "val_loss": 5.515850067138672, "nfe_fwd": 204, "nfe_bwd": 200, "wallclock_s": 4.697545416885987}
+{"step": 250, "outer_step": 50, "inner": 0, "mode": "adam", "loss_w": 5.3991007804870605, "num_micro": 1, "nfe_fwd": 254, "nfe_bwd": 250, "wallclock_s": 5.865034957882017}
+{"step": 300, "outer_step": 100, "inner": 0, "mode": "adam", "loss_w": 5.2831525802612305, "num_micro": 1, "val_loss": 5.283414363861084, "nfe_fwd": 305, "nfe_bwd": 300, "wallclock_s": 7.467873292043805}
+{"step": 350, "outer_step": 150, "inner": 0, "mode": "adam", "loss_w": 4.9002251625061035, "num_micro": 1, "nfe_fwd": 355, "nfe_bwd": 350, "wallclock_s": 9.326945042004809}
+{"step": 400, "outer_step": 200, "inner": 0, "mode": "adam", "loss_w": 5.243523597717285, "num_micro": 1, "val_loss": 5.200823783874512, "nfe_fwd": 406, "nfe_bwd": 400, "wallclock_s": 11.302709999959916}
+{"step": 450, "outer_step": 250, "inner": 0, "mode": "adam", "loss_w": 5.054241180419922, "num_micro": 1, "nfe_fwd": 456, "nfe_bwd": 450, "wallclock_s": 13.546172542031854}
+{"step": 500, "outer_step": 300, "inner": 0, "mode": "adam", "loss_w": 5.109122276306152, "num_micro": 1, "val_loss": 5.026063919067383, "nfe_fwd": 507, "nfe_bwd": 500, "wallclock_s": 16.11930779204704}
+{"step": 550, "outer_step": 350, "inner": 0, "mode": "adam", "loss_w": 4.781217575073242, "num_micro": 1, "nfe_fwd": 557, "nfe_bwd": 550, "wallclock_s": 18.83288533287123}
+{"step": 600, "outer_step": 400, "inner": 0, "mode": "adam", "loss_w": 4.950953006744385, "num_micro": 1, "val_loss": 4.900076389312744, "nfe_fwd": 608, "nfe_bwd": 600, "wallclock_s": 21.665500625036657}
+{"step": 650, "outer_step": 450, "inner": 0, "mode": "adam", "loss_w": 4.872135639190674, "num_micro": 1, "nfe_fwd": 658, "nfe_bwd": 650, "wallclock_s": 25.13714037486352}
+{"step": 700, "outer_step": 500, "inner": 0, "mode": "adam", "loss_w": 4.906603813171387, "num_micro": 1, "val_loss": 4.802471160888672, "nfe_fwd": 709, "nfe_bwd": 700, "wallclock_s": 28.43325745803304}
+{"step": 750, "outer_step": 550, "inner": 0, "mode": "adam", "loss_w": 4.833593368530273, "num_micro": 1, "nfe_fwd": 759, "nfe_bwd": 750, "wallclock_s": 31.624883708078414}
+{"step": 800, "outer_step": 600, "inner": 0, "mode": "adam", "loss_w": 4.915214538574219, "num_micro": 1, "val_loss": 4.704116344451904, "nfe_fwd": 810, "nfe_bwd": 800, "wallclock_s": 34.929691083030775}
+{"step": 850, "outer_step": 650, "inner": 0, "mode": "adam", "loss_w": 5.013811111450195, "num_micro": 1, "nfe_fwd": 860, "nfe_bwd": 850, "wallclock_s": 38.21876462502405}
+{"step": 900, "outer_step": 700, "inner": 0, "mode": "adam", "loss_w": 4.911186218261719, "num_micro": 1, "val_loss": 4.754284858703613, "nfe_fwd": 911, "nfe_bwd": 900, "wallclock_s": 41.46669516689144}
+{"step": 950, "outer_step": 750, "inner": 0, "mode": "adam", "loss_w": 4.753403663635254, "num_micro": 1, "nfe_fwd": 961, "nfe_bwd": 950, "wallclock_s": 44.72026191698387}
+{"step": 1000, "outer_step": 800, "inner": 0, "mode": "adam", "loss_w": 4.60797643661499, "num_micro": 1, "val_loss": 4.619237899780273, "nfe_fwd": 1012, "nfe_bwd": 1000, "wallclock_s": 47.993599832989275}
+{"step": 1050, "outer_step": 850, "inner": 0, "mode": "adam", "loss_w": 4.61443567276001, "num_micro": 1, "nfe_fwd": 1062, "nfe_bwd": 1050, "wallclock_s": 51.21712925005704}
+{"step": 1100, "outer_step": 900, "inner": 0, "mode": "adam", "loss_w": 4.657166481018066, "num_micro": 1, "val_loss": 4.58181095123291, "nfe_fwd": 1113, "nfe_bwd": 1100, "wallclock_s": 54.47810945799574}
+{"step": 1150, "outer_step": 950, "inner": 0, "mode": "adam", "loss_w": 4.6744818687438965, "num_micro": 1, "nfe_fwd": 1163, "nfe_bwd": 1150, "wallclock_s": 57.793615124886855}
+{"step": 1200, "outer_step": 1000, "inner": 0, "mode": "adam", "loss_w": 4.521609306335449, "num_micro": 1, "val_loss": 4.494828701019287, "nfe_fwd": 1214, "nfe_bwd": 1200, "wallclock_s": 61.01324408291839}
